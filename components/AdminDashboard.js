@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import BookingList from './BookingList';
 
@@ -19,7 +21,7 @@ export default function AdminDashboard() {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold mb-4">Manage Rooms</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">Manage Rooms</h2>
             <div className="mb-6">
                 <input
                     type="text"
@@ -35,7 +37,7 @@ export default function AdminDashboard() {
                     placeholder="Capacity"
                     className="mr-2 px-3 py-2 border border-gray-300 rounded"
                 />
-                <button onClick={addRoom} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                <button onClick={addRoom} className="px-4 py-2 bg-accent text-white rounded hover:bg-accent-dark">
                     Add Room
                 </button>
             </div>
@@ -47,7 +49,7 @@ export default function AdminDashboard() {
                 ))}
             </ul>
 
-            <h2 className="text-2xl font-bold mb-4">View All Bookings</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">View All Bookings</h2>
             <BookingList />
         </div>
     );

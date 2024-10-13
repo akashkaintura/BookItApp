@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 
 export default function BookingForm({ room }) {
@@ -7,8 +9,28 @@ export default function BookingForm({ room }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Booking submission logic can be added here
-        alert(`Room booked successfully by ${name} on ${date} at ${time}`);
+
+        fetch('/api/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                room: room._id,
+                name,
+                date,
+                time,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('Booking created successfully!');
+                    setName('');
+                    setDate('');
+                    setTime('');
+                }
+            });
     };
 
     return (
@@ -43,7 +65,7 @@ export default function BookingForm({ room }) {
                     required
                 />
             </div>
-            <button type="submit" className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+            <button type="submit" className="w-full px-4 py-2 bg-accent text-white rounded hover:bg-accent-dark">
                 Book Room
             </button>
         </form>

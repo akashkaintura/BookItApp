@@ -1,4 +1,6 @@
-import '../styles/globals.css';
+"use client";
+
+import '../styles/global.css';
 
 export default function RootLayout({ children }) {
   return (
