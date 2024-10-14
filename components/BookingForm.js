@@ -2,72 +2,67 @@
 
 import { useState } from 'react';
 
-export default function BookingForm({ room }) {
+export default function BookingForm({ roomId, onBookingComplete }) {
     const [name, setName] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
+    const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const bookRoom = async (e) => {
         e.preventDefault();
-
-        fetch('/api/bookings', {
+        const response = await fetch('/api/bookings', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                room: room._id,
-                name,
-                date,
-                time,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    alert('Booking created successfully!');
-                    setName('');
-                    setDate('');
-                    setTime('');
-                }
-            });
+            body: JSON.stringify({ roomId, name, date, time }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            setMessage('Room booked successfully!');
+            onBookingComplete(data.data);
+            setName('');
+            setDate('');
+            setTime('');
+        } else {
+            setMessage('Failed to book room.');
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mt-6">
-            <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded"
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700">Date</label>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded"
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700">Time</label>
-                <input
-                    type="time"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded"
-                    required
-                />
-            </div>
-            <button type="submit" className="w-full px-4 py-2 bg-accent text-white rounded hover:bg-accent-dark">
+        <form onSubmit={bookRoom} className="bg-gray-100 p-4 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Book Room</h2>
+            <input
+                type="text"
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full p-2 mb-4 border border-gray-300 rounded"
+                required
+            />
+            <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full p-2 mb-4 border border-gray-300 rounded"
+                required
+            />
+            <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="w-full p-2 mb-4 border border-gray-300 rounded"
+                required
+            />
+            <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            >
                 Book Room
             </button>
+            {message && <p className="text-green-500 mt-2">{message}</p>}
         </form>
     );
 }
